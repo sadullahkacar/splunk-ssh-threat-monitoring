@@ -229,10 +229,30 @@ If this detection triggered in a production environment, additional investigatio
 
 ```text
 splunk-ssh-threat-monitoring/
+│
 ├── README.md
+│
 ├── spl/
+│   ├── 01-data-assessment.spl
+│   ├── 02-failed-authentication-analysis.spl
+│   ├── 03-baseline-analysis.spl
+│   ├── 04-failed-success-correlation.spl
+│   ├── 05-hourly-baseline.spl
+│   └── 06-high-risk-ssh-detection.spl
+│
 ├── screenshots/
+│   ├── dashboard.png
+│   ├── hourly-detection.png
+│   └── alert-configuration.png
+│
 └── docs/
+    └── investigation-findings.md
+
+### Additional Documentation
+
+For the complete investigation methodology, findings, analyst assessment, and recommended SOC response:
+
+[View the full investigation report](docs/investigation-findings.md)
 ```
 
 The SPL searches, dashboard screenshots, detection results, alert configuration, and investigation documentation are organized within these directories.
