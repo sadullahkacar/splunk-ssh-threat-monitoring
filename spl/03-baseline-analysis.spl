@@ -1,0 +1,19 @@
+index=security sourcetype=linux_secure
+"Failed password"
+| rex field=_raw "Failed password for (?:(?<invalid_user>invalid user) )?(?<user>\S+) from (?<src_ip>\d{1,3}(?:\.\d{1,3}){3}) port (?<src_port>\d+)"
+| stats
+    count AS failed_attempts
+    dc(user) AS unique_accounts
+    dc(host) AS targeted_hosts
+  by src_ip
+| stats
+    count AS total_source_ips
+    min(failed_attempts) AS min_failures
+    median(failed_attempts) AS median_failures
+    avg(failed_attempts) AS avg_failures
+    perc95(failed_attempts) AS p95_failures
+    max(failed_attempts) AS max_failures
+    median(unique_accounts) AS median_unique_accounts
+    avg(unique_accounts) AS avg_unique_accounts
+    perc95(unique_accounts) AS p95_unique_accounts
+    max(unique_accounts) AS max_unique_accounts
