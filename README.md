@@ -247,16 +247,15 @@ splunk-ssh-threat-monitoring/
 │
 └── docs/
     └── investigation-findings.md
+```
 
 ### Additional Documentation
 
 For the complete investigation methodology, findings, analyst assessment, and recommended SOC response:
 
 [View the full investigation report](docs/investigation-findings.md)
-```
 
 The SPL searches, dashboard screenshots, detection results, alert configuration, and investigation documentation are organized within these directories.
-
 ---
 
 ## Disclaimer
