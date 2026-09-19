@@ -108,6 +108,15 @@ The `Critical` classification uses additional lab tuning thresholds and should n
 
 ---
 
+### Detection Results
+
+The final hourly detection identified **64 source-IP/hour observations** exceeding the dataset-derived thresholds.
+
+The example below shows a Critical detection involving **148 failed authentication attempts**, **80 unique targeted accounts**, and activity across all **3 monitored hosts**.
+
+![Hourly SSH Detection Results](screenshots/hourly-detection.png)
+
+---
 ## Final Detection Logic
 
 ```spl
@@ -175,6 +184,13 @@ The final detection was configured as a scheduled Splunk alert.
 
 A delayed search window was used to account for potential ingestion latency.
 
+### Scheduled Alert Configuration
+
+The detection was operationalized as an enabled hourly Splunk alert.
+
+The alert triggers when the scheduled search returns one or more results and adds the detection to Splunk's Triggered Alerts for analyst review.
+
+![Splunk Scheduled Alert Configuration](screenshots/alert-configuration.png)
 ---
 
 ## SOC Analyst Response
