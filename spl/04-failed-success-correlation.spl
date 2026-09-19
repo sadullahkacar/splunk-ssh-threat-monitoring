@@ -1,0 +1,17 @@
+index=security sourcetype=linux_secure
+("Failed password" OR "Accepted password")
+| rex field=_raw "(?<auth_action>Failed|Accepted) password for (?:(?:invalid user) )?(?<user>\S+) from (?<src_ip>\d{1,3}(?:\.\d{1,3}){3}) port (?<src_port>\d+)"
+| stats
+    count(eval(auth_action="Failed")) AS failures
+    count(eval(auth_action="Accepted")) AS successes
+    earliest(eval(if(auth_action="Failed",_time,NULL()))) AS first_failure
+    latest(eval(if(auth_action="Failed",_time,NULL()))) AS last_failure
+    earliest(eval(if(auth_action="Accepted",_time,NULL()))) AS first_success
+  by src_ip user host
+| where failures > 0 AND successes > 0
+| where first_success > first_failure
+| eval first_failure_time=strftime(first_failure,"%Y-%m-%d %H:%M:%S")
+| eval last_failure_time=strftime(last_failure,"%Y-%m-%d %H:%M:%S")
+| eval first_success_time=strftime(first_success,"%Y-%m-%d %H:%M:%S")
+| sort - failures
+| table src_ip user host failures successes first_failure_time last_failure_time first_success_time
