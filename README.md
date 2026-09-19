@@ -157,7 +157,11 @@ The dashboard includes:
 - Hourly high-risk SSH activity
 - Detailed suspicious source IP investigation results
 
-A dashboard screenshot will be included in the `screenshots/` directory.
+### Dashboard Overview
+
+The final dashboard provides a consolidated view of SSH authentication activity, suspicious source IP behavior, account targeting, host distribution, and hourly high-risk detections.
+
+![SSH Authentication Threat Monitoring Dashboard](screenshots/dashboard.png)
 
 ---
 
