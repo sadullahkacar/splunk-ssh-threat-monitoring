@@ -1,0 +1,25 @@
+index=security sourcetype=linux_secure
+"Failed password"
+| rex field=_raw "Failed password for (?:(?<invalid_user>invalid user) )?(?<user>\S+) from (?<src_ip>\d{1,3}(?:\.\d{1,3}){3}) port (?<src_port>\d+)"
+| bin _time span=1h
+| stats
+    count AS failed_attempts
+    dc(user) AS unique_accounts
+    dc(host) AS targeted_hosts
+    values(host) AS hosts
+    values(user) AS targeted_users
+  by _time src_ip
+| eval detection_reason=case(
+    failed_attempts >= 52 AND unique_accounts >= 40, "High failures + broad account targeting",
+    failed_attempts >= 52, "High failure volume",
+    unique_accounts >= 40, "Broad account targeting"
+  )
+| eval severity=case(
+    failed_attempts >= 104 AND unique_accounts >= 60, "Critical",
+    failed_attempts >= 52 AND unique_accounts >= 40, "High",
+    failed_attempts >= 52 OR unique_accounts >= 40, "Medium"
+  )
+| where failed_attempts >= 52 OR unique_accounts >= 40
+| eval detection_time=strftime(_time,"%Y-%m-%d %H:%M:%S")
+| table detection_time src_ip severity detection_reason failed_attempts unique_accounts targeted_hosts hosts targeted_users
+| sort - failed_attempts
